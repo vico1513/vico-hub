@@ -1,3 +1,4 @@
+
 workflows:
   ios-vico-hub:
     name: Vico Hub - iOS
@@ -7,8 +8,6 @@ workflows:
     environment:
       vars:
         BUNDLE_ID: com.vico1513.vicohub
-        XCODE_PROJECT: ios/App/App.xcodeproj
-        XCODE_SCHEME: App
       node: 22
       xcode: latest
 
@@ -24,15 +23,7 @@ workflows:
 
       - name: Compilar projeto iOS
         script: |
-          xcodebuild \
-            -project "$XCODE_PROJECT" \ \
-            -scheme "$XCODE_SCHEME" \
-            -configuration Release \
-            -sdk iphoneos \
-            -destination 'generic/platform=iOS' \
-            -archivePath build/VicoHub.xcarchive \
-            CODE_SIGNING_ALLOWED=NO \
-            archive
+          xcodebuild -project "ios/App/App.xcodeproj" -scheme App -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -archivePath "$CM_BUILD_DIR/build/VicoHub.xcarchive" CODE_SIGNING_ALLOWED=NO archive
 
     artifacts:
       - build/VicoHub.xcarchive
