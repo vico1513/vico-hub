@@ -25,5 +25,6 @@ workflows:
         script: |
           xcodebuild -project "ios/App/App.xcodeproj" -scheme App -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -archivePath "$CM_BUILD_DIR/build/VicoHub.xcarchive" CODE_SIGNING_ALLOWED=NO archive
 
-    artifacts:
-      - build/VicoHub.xcarchive
+artifacts:
+  - build/VicoHub.xcarchive
+  - build/VicoHub.xcarchive/Products/Applications/*.app
