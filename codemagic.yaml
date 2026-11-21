@@ -21,11 +21,30 @@ workflows:
       - name: Sincronizar Capacitor
         script: npx cap sync ios
 
-      - name: Compilar projeto iOS
+      - name: Compilar e gerar IPA
         script: |
-          xcodebuild -project "ios/App/App.xcodeproj" -scheme App -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -archivePath "$CM_BUILD_DIR/build/VicoHub.xcarchive" CODE_SIGNING_ALLOWED=NO archive
+          set -e
+
+          xcodebuild \
+            -project "ios/App/App.xcodeproj" \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$CM_BUILD_DIR/build/VicoHub.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            archive
+
+          mkdir -p "$CM_BUILD_DIR/build/ipa/Payload"
+
+          cp -R "$CM_BUILD_DIR/build/VicoHub.xcarchive/Products/Applications/App.app" \
+            "$CM_BUILD_DIR/build/ipa/Payload/"
+
+          cd "$CM_BUILD_DIR/build/ipa"
+
+          zip -r "$CM_BUILD_DIR/build/VicoHub.ipa" Payload
 
     artifacts:
+      - build/VicoHub.ipa
       - build/VicoHub.xcarchive/**
-      - build/VicoHub.xcarchive/Products/Applications/*.app
       - /tmp/xcodebuild_logs/*.log
